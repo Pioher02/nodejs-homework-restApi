@@ -1,5 +1,5 @@
 const express = require('express')
-const {listContacts, getContactById} = require("../../models/contacts")
+const {listContacts, getContactById, addContact} = require("../../models/contacts")
 
 const router = express.Router()
 
@@ -13,13 +13,15 @@ router.get('/:contactId', async (req, res, next) => {
   if (contact) {
     res.json(contact);
   } else {
-    res.json({ message: 'Not found' });
+    res.status(404).json({ message: 'Not found' });
   }
   
 })
 
 router.post('/', async (req, res, next) => {
-  res.json({ message: 'template message' })
+  const { email, password } = req.body;
+  const newContact = await addContact(req);
+  res.json(newContact)
 })
 
 router.delete('/:contactId', async (req, res, next) => {

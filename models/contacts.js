@@ -11,9 +11,11 @@ const getContactById = async (contactId) => {
   return contact;
 };
 
-const removeContact = async (contactId) => {};
+const addContact = async (body) => {
+  
+};
 
-const addContact = async (body) => {};
+const removeContact = async (contactId) => {};
 
 const updateContact = async (contactId, body) => {};
 
