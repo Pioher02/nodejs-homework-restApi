@@ -1,35 +1,59 @@
-const express = require('express')
-const {listContacts, getContactById, addContact} = require("../../models/contacts")
+const express = require("express");
+const Joi = require("joi");
+const {
+  listContacts,
+  getContactById,
+  addContact,
+} = require("../../models/contacts");
 
-const router = express.Router()
+const router = express.Router();
 
-router.get('/', async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   const contacts = await listContacts();
   res.json(contacts);
-})
+});
 
-router.get('/:contactId', async (req, res, next) => {
+router.get("/:contactId", async (req, res, next) => {
   const contact = await getContactById(req.params.contactId);
   if (contact) {
     res.json(contact);
   } else {
-    res.status(404).json({ message: 'Not found' });
+    res.status(404).json({ message: "Not found" });
   }
-  
-})
+});
 
-router.post('/', async (req, res, next) => {
-  const { email, password } = req.body;
-  const newContact = await addContact(req);
-  res.json(newContact)
-})
+router.post("/", async (req, res, next) => {
+  const { name, email, phone } = req.body;
 
-router.delete('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+  if (name === undefined || email === undefined || phone === undefined) {
+    res.status(400).json({ message: "missing required field" });
+  } else {
+    const schema = Joi.object({
+      name: Joi.string().min(3).max(30).required(),
+      email: Joi.string().email({
+        minDomainSegments: 2,
+        tlds: { allow: ["com", "net"] },
+      }),
+      phone: Joi.number().integer().min(7).required(),
+    });
 
-router.put('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+    const { error, value } = schema.validate({ name, email, phone });
 
-module.exports = router
+    if (error !== undefined) {
+      res.status(400).json(error.message);
+    } else {
+      const newContact = await addContact(value);
+      res.status(201).json(newContact);
+    }
+  }
+});
+
+router.delete("/:contactId", async (req, res, next) => {
+  res.json({ message: "template message" });
+});
+
+router.put("/:contactId", async (req, res, next) => {
+  res.json({ message: "template message" });
+});
+
+module.exports = router;
