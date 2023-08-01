@@ -5,6 +5,7 @@ const {
   getContactById,
   addContact,
   removeContact,
+  updateContact,
 } = require("../../models/contacts");
 
 const router = express.Router();
@@ -60,7 +61,33 @@ router.delete("/:contactId", async (req, res, next) => {
 });
 
 router.put("/:contactId", async (req, res, next) => {
-  res.json({ message: "template message" });
+  const { name, email, phone } = req.body;
+
+  if (name === undefined && email === undefined && phone === undefined) {
+    res.status(400).json({ message: "missing fields" });
+  } else {
+    const schema = Joi.object({
+      name: Joi.string().min(3).max(30),
+      email: Joi.string().email({
+        minDomainSegments: 2,
+        tlds: { allow: ["com", "net"] },
+      }),
+      phone: Joi.number().integer().min(7),
+    });
+
+    const { error, value } = schema.validate({ name, email, phone });
+
+    if (error !== undefined) {
+      res.status(400).json(error.message);
+    } else {
+      const modifiedContact = await updateContact(req.params.contactId, value);
+      if (modifiedContact) {
+        res.status(200).json(modifiedContact);
+      } else {
+        res.status(404).json({ message: "Not found" });
+      }
+    }
+  }
 });
 
 module.exports = router;

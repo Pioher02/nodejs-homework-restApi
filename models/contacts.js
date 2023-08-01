@@ -32,7 +32,33 @@ const removeContact = async (contactId) => {
   return state;
 };
 
-const updateContact = async (contactId, body) => {};
+const updateContact = async (contactId, body) => {
+  const contacts = await listContacts();
+  const contact = contacts.find((contact) => contact.id === contactId);
+  if (contact) {
+    const index = contacts.findIndex((contact) => contact.id === contactId);
+    const modifiedContact = {};
+    modifiedContact.id = contact.id;
+    if (body.name) {
+      modifiedContact.name = body.name;
+    } else {
+      modifiedContact.name = contact.name;
+    }
+    if (body.email) {
+      modifiedContact.email = body.email;
+    } else {
+      modifiedContact.email = contact.email;
+    }
+    if (body.phone) {
+      modifiedContact.phone = body.phone;
+    } else {
+      modifiedContact.phone = contact.phone;
+    }
+    contacts.splice(index, 1, modifiedContact);
+    await fs.writeFile("models/contacts.json", JSON.stringify(contacts));
+    return modifiedContact;
+  }
+};
 
 module.exports = {
   listContacts,
