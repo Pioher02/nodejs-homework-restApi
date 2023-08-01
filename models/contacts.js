@@ -20,7 +20,17 @@ const addContact = async (body) => {
   return body;
 };
 
-const removeContact = async (contactId) => {};
+const removeContact = async (contactId) => {
+  const contacts = await listContacts();
+  const filteredList = contacts.filter((contact) => contact.id !== contactId);
+  await fs.writeFile("models/contacts.json", JSON.stringify(filteredList));
+  if (contacts.length === filteredList.length) {
+    var state = 404;
+  } else {
+    state = 200;
+  }
+  return state;
+};
 
 const updateContact = async (contactId, body) => {};
 
