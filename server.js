@@ -26,12 +26,15 @@ app.use((err, _, res) => {
   });
 });
 
+const PORT = process.env.PORT;
+
 connection
   .then(() => {
-    app.listen(3000, () => {
+    app.listen(PORT, () => {
       console.log("Database connection successful");
     });
   })
   .catch((err) => {
     console.log(`Server not running. Error .message ${err.message}`);
+    process.exit(1);
   });
