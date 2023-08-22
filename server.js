@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const connection = require("./db/connection");
-const routerApi = require ("./api");
 
 require("dotenv").config();
 
@@ -12,6 +11,7 @@ app.use(cors());
 
 require("./config/config-passport");
 
+const routerApi = require ("./api");
 app.use("/api", routerApi);
 
 app.use((_, res) => {
@@ -19,9 +19,9 @@ app.use((_, res) => {
     status: "error",
     code: 404,
     message: `Use api on routes: 
-    /api/registration - registration user {username, email, password}
+    /api/signup - registration user {username, email, password}
     /api/login - login {email, password}
-    /api/list - get message if user is authenticated`,
+    /api/me - get message if user is authenticated`,
     data: "Not found",
   });
 });
@@ -45,6 +45,6 @@ connection
     });
   })
   .catch((err) => {
-    console.log(`Server not running.
-        Error message: ${err.message}`);
+    console.log(`Server not running. Error .message ${err.message}`);
+    process.exit(1);
   });

@@ -2,6 +2,8 @@ const express = require("express");
 const User = require("../schemas/user");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
+const auth = require("../middleware/auth");
+const meCtrl = require("../controller/me.controller");
 require("dotenv").config();
 const secret = process.env.SECRET;
 
@@ -9,6 +11,7 @@ const secret = process.env.SECRET;
 // const loginCtrl = require("../controller/login.controller");
 
 router.post("/signup", async (req, res, next) => {
+
   const { username, email, password } = req.body;
   const user = await User.findOne({ email });
 
@@ -63,5 +66,7 @@ router.post("/login", async (req, res, next) => {
     },
   });
 });
+
+// router.get("/me", auth, meCtrl);
 
 module.exports = router;
