@@ -3,7 +3,8 @@ const User = require("../schemas/user");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth");
-const meCtrl = require("../controller/me.controller");
+const meCtrl = require("../controller/me");
+const logoutCtrl = require("../controller/logout");
 require("dotenv").config();
 const secret = process.env.SECRET;
 
@@ -67,6 +68,7 @@ router.post("/login", async (req, res, next) => {
   });
 });
 
-// router.get("/me", auth, meCtrl);
+router.get("/me", auth, meCtrl);
+router.post ("/logout", auth, logoutCtrl);
 
 module.exports = router;
