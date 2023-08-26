@@ -18,6 +18,15 @@ const userSchema = new Schema({
     type: String,
     required: [true, "Password required"],
   },
+  subscription: {
+    type: String,
+    enum: ["starter", "pro", "business"],
+    default: "starter",
+  },
+  token: {
+    type: String,
+    default: null,
+  },
 });
 
 userSchema.methods.setPassword = function (password) {
