@@ -4,7 +4,6 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth");
 const meCtrl = require("../controller/me");
-const logoutCtrl = require("../controller/logout");
 require("dotenv").config();
 const secret = process.env.SECRET;
 
@@ -12,7 +11,6 @@ const secret = process.env.SECRET;
 // const loginCtrl = require("../controller/login.controller");
 
 router.post("/signup", async (req, res, next) => {
-
   const { username, email, password } = req.body;
   const user = await User.findOne({ email });
 
@@ -67,8 +65,32 @@ router.post("/login", async (req, res, next) => {
     },
   });
 });
+const invalidateTokens = new Set();
 
-router.get("/me", auth, meCtrl);
-router.post ("/logout", auth, logoutCtrl);
+const validToken = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(" ")[1];
+
+  if (invalidateTokens.has(token)) {
+    
+    return res.status(401).json({
+      status: "error",
+      code: 401,
+      data: "Unauthorized: Invalid token",
+    });
+  }
+
+  next();
+};
+
+router.get("/me", validToken, auth, meCtrl);
+
+router.post("/logout", auth, (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(" ")[1];
+
+  invalidateTokens.add(token);
+  res.status(204).send();
+});
 
 module.exports = router;
