@@ -3,8 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node server.js",
-    "start:dev": "nodemon server.js",
+
+    "start": "node ./server.js",
+    "start:dev": "nodemon ./server.js",
+
     "lint": "eslint **/*.js",
     "lint:fix": "eslint --fix **/*.js"
   },
@@ -17,7 +19,14 @@
     "mongodb": "^5.7.0",
     "mongoose": "^7.4.3",
     "morgan": "1.10.0",
-    "nanoid": "^2.1.11"
+    "nanoid": "^2.1.11",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.3.1",
+    "jsonwebtoken": "^9.0.1",
+    "mongoose": "^7.4.2",
+    "nodemon": "^3.0.1",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.1"
   },
   "devDependencies": {
     "eslint": "7.19.0",

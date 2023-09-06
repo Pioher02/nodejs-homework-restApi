@@ -9,11 +9,22 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const routerApi = require("./api");
+require("./config/config-passport");
+
+const routerApi = require ("./api");
 app.use("/api", routerApi);
 
 app.use((_, res) => {
-  res.status(404).json({ status: "error", code: 404, data: "Not found" });
+  res.status(404).json({
+    status: "error",
+    code: 404,
+    message: `Use api on routes: 
+    /api/signup - registration user {username, email, password}
+    /api/login - login {email, password}
+    /api/me - get message if user is authenticated`,
+    data: "Not found",
+  });
+
 });
 
 app.use((err, _, res) => {
@@ -22,19 +33,25 @@ app.use((err, _, res) => {
     status: "fail",
     code: 500,
     message: err.message,
-    data: "Internal server error",
+
+    data: "Internal Server Error",
   });
 });
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
+
 
 connection
   .then(() => {
     app.listen(PORT, () => {
-      console.log("Database connection successful");
+
+      console.log(`Database connection successful on port: ${PORT}`);
+
     });
   })
   .catch((err) => {
     console.log(`Server not running. Error .message ${err.message}`);
     process.exit(1);
+
   });
+

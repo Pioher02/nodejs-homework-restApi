@@ -1,12 +1,35 @@
 const express = require("express");
 const router = express.Router();
-const ctrlContact = require("../controller");
+const signupCtrl = require("../controller/signup");
+const loginCtrl = require("../controller/login");
+const logoutCtrl = require("../controller/logout");
+const createContactCtrl = require("../controller/createContact");
+const getContactsCtrl = require("../controller/getContacts");
+const getContactByIdCtrl = require("../controller/getContactById");
+const validToken = require("../middleware/validToken");
+const auth = require("../middleware/auth");
+const deleteContactCtrl = require("../controller/deleteContact");
+const updateContactCtrl = require("../controller/updateContact");
+const updateStatusContactCtrl = require("../controller/updateStatusContact");
 
-router.get("/contacts", ctrlContact.get);
-router.get("/contacts/:id", ctrlContact.getById);
-router.post("/contacts", ctrlContact.create);
-router.delete("/contacts/:id", ctrlContact.remove);
-router.put("/contacts/:id", ctrlContact.update);
-router.patch("/contacts/:id", ctrlContact.updateFavorite);
+require("dotenv").config();
+
+router.post("/users/signup", signupCtrl);
+
+router.post("/users/login", loginCtrl);
+
+router.post("/users/logout", validToken, auth, logoutCtrl);
+
+router.post("/users/current", validToken, auth, createContactCtrl);
+
+router.get("/users/current", validToken, auth, getContactsCtrl);
+
+router.get("/users/current/:id", validToken, auth, getContactByIdCtrl);
+
+router.delete("/users/current/:id", validToken, auth, deleteContactCtrl);
+
+router.put("/users/current/:id", validToken, auth, updateContactCtrl);
+
+router.patch("/users/current/:id/favorite", validToken, auth, updateStatusContactCtrl);
 
 module.exports = router;
