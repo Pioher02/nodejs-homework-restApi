@@ -10,8 +10,8 @@ const validToken = async (req, res, next) => {
     const verify = jwt.verify(token, secret);
     const id = verify.id;
     const user = await User.findOne({ _id: id });
-    
-    if (user || token === user.token) {
+
+    if (token === user.token && user) {
       req.user = user;
       next();
     }

@@ -1,5 +1,5 @@
-const User = require("../schemas/user");
 const jwt = require("jsonwebtoken");
+const { getUserByEmail, updateUserToken } = require("../service/user");
 const secret = process.env.SECRET;
 
 const loginCtrl = async (req, res, next) => {
@@ -13,7 +13,7 @@ const loginCtrl = async (req, res, next) => {
     });
   }
 
-  const user = await User.findOne({ email });
+  const user = await getUserByEmail(email);
 
   if (!user || !user.validPassword(password)) {
     return res.status(401).json({
@@ -51,7 +51,7 @@ const loginCtrl = async (req, res, next) => {
 };
 
 const updateToken = async (id, token) => {
-  return User.findByIdAndUpdate({ _id: id }, { token: token });
+  return updateUserToken({ id, token });
 };
 
 module.exports = loginCtrl;
