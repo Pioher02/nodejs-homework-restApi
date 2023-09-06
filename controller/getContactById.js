@@ -1,7 +1,6 @@
 const { getContactById } = require("../service/contact");
 
 const getContactByIdCtrl = async (req, res, next) => {
-  console.log("entró a get");
     const { id } = req.params;
     try {
       const results = await getContactById(id);

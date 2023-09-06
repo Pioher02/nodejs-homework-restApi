@@ -8,6 +8,9 @@ const getContactsCtrl = require("../controller/getContacts");
 const getContactByIdCtrl = require("../controller/getContactById");
 const validToken = require("../middleware/validToken");
 const auth = require("../middleware/auth");
+const deleteContactCtrl = require("../controller/deleteContact");
+const updateContactCtrl = require("../controller/updateContact");
+const updateStatusContactCtrl = require("../controller/updateStatusContact");
 
 require("dotenv").config();
 
@@ -22,5 +25,11 @@ router.post("/users/current", validToken, auth, createContactCtrl);
 router.get("/users/current", validToken, auth, getContactsCtrl);
 
 router.get("/users/current/:id", validToken, auth, getContactByIdCtrl);
+
+router.delete("/users/current/:id", validToken, auth, deleteContactCtrl);
+
+router.put("/users/current/:id", validToken, auth, updateContactCtrl);
+
+router.patch("/users/current/:id/favorite", validToken, auth, updateStatusContactCtrl);
 
 module.exports = router;
