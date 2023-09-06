@@ -24,6 +24,7 @@ app.use((_, res) => {
     /api/me - get message if user is authenticated`,
     data: "Not found",
   });
+
 });
 
 app.use((err, _, res) => {
@@ -32,19 +33,25 @@ app.use((err, _, res) => {
     status: "fail",
     code: 500,
     message: err.message,
+
     data: "Internal Server Error",
   });
 });
 
 const PORT = process.env.PORT || 3000;
 
+
 connection
   .then(() => {
     app.listen(PORT, () => {
+
       console.log(`Database connection successful on port: ${PORT}`);
+
     });
   })
   .catch((err) => {
     console.log(`Server not running. Error .message ${err.message}`);
     process.exit(1);
+
   });
+
